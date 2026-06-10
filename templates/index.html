@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIRA Chatbot Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="page-bg"></div>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <p class="eyebrow">SIRA Retrieval Studio</p>
+          <h1>AI Document Copilot</h1>
+          <p class="subtext">
+            Upload, index, and chat with one-shot lexical retrieval while tracking each backend stage in real time.
+          </p>
+        </div>
+        <div class="status-rail">
+          <span id="appStatus" class="badge idle">Idle</span>
+          <span class="badge soft">One-shot BM25</span>
+          <span class="badge soft">Expected Sketch</span>
+        </div>
+      </header>
+
+      <section class="progress-card" id="progressWrap">
+        <div class="progress-head">
+          <strong id="progressLabel">Idle</strong>
+          <span id="progressValue">0%</span>
+        </div>
+        <div class="progress-track">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+        <p id="progressHint" class="progress-hint">Waiting for upload or chat request.</p>
+      </section>
+
+      <section class="layout">
+        <aside class="panel left-panel">
+          <h3>Upload and Index</h3>
+          <p class="panel-sub">Supported: PDF, TXT, MD</p>
+
+          <form id="uploadForm">
+            <label class="upload-box" for="fileInput">
+              <input id="fileInput" type="file" accept=".pdf,.txt,.md" required />
+              <span class="upload-title">Drop document or click to browse</span>
+              <span class="upload-help">SIRA expansion runs after upload</span>
+            </label>
+            <button class="btn primary" id="uploadBtn" type="submit">Upload and Build Index</button>
+          </form>
+
+          <div class="status-stack">
+            <div class="status-row">
+              <span>Document</span>
+              <strong id="docName">None</strong>
+            </div>
+            <div class="status-row">
+              <span>Chunks</span>
+              <strong id="chunkCount">0</strong>
+            </div>
+            <div class="status-row">
+              <span>Index Time</span>
+              <strong id="indexTime">0 ms</strong>
+            </div>
+          </div>
+
+          <div class="model-card compact">
+            <h3>Model Configuration</h3>
+            <dl>
+              <div>
+                <dt>Base URL</dt>
+                <dd id="baseUrl">{{ base_url or 'Not configured' }}</dd>
+              </div>
+              <div>
+                <dt>Chat Model</dt>
+                <dd id="chatModel">{{ chat_model }}</dd>
+              </div>
+              <div>
+                <dt>Embedding Model</dt>
+                <dd id="embeddingModel">{{ embedding_model }}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <h3>Processing Timeline</h3>
+          <div id="timeline" class="timeline">
+            <article class="timeline-item muted">
+              <div class="dot"></div>
+              <div>
+                <h4>Awaiting upload</h4>
+                <p>No processing events yet.</p>
+              </div>
+            </article>
+          </div>
+        </aside>
+
+        <section class="panel chat-panel">
+          <h3>Chat with Document</h3>
+          <p class="panel-sub">SIRA flow: sketch -> fuse -> one-shot BM25 -> answer</p>
+
+          <div id="chatLog" class="chat-log"></div>
+
+          <form id="chatForm" class="chat-form">
+            <input
+              id="messageInput"
+              type="text"
+              placeholder="Ask something about the uploaded document..."
+              required
+            />
+            <button class="btn primary" id="sendBtn" type="submit">Send</button>
+          </form>
+
+          <div class="retrieval-section">
+            <h3>Retrieved Evidence</h3>
+            <div id="retrievalList" class="retrieval-list">
+              <p class="muted-copy">No retrieval results yet.</p>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="/static/app.js" defer></script>
+  </body>
+</html>
